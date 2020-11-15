@@ -1,28 +1,46 @@
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+var express = require('express');
+var app = express();
+var expressWs = require('express-ws')(app);
+const WebSocket = require("ws");
+var wss = expressWs.getWss();
+function broadcast(message) {
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(message));
+    }
+  });
+}
+
+app.ws('/', (ws, req) => {
+  ws.on("message", json => {
+      var messageIn = JSON.parse(json);
+      var messageOut;
+      if (messageIn.username) {
+          ws.username = messageIn.username;
+          messageOut = {
+              is_online: '🔵 <i>' + ws.username + ' join the chat..</i>'
+          };
+      }
+      if (messageIn.chat_message) {
+          messageOut = {
+              chat_message: '<strong>' + ws.username + '</strong>: ' + messageIn.chat_message
+          };
+      }
+      broadcast(messageOut)
+  });
+  
+  ws.on("close", (code, reason) => {
+      messageOut = {
+          is_online: '🔴 <i>' + ws.username + ' left the chat..</i>'
+      };
+      broadcast(messageOut)
+  });
+});
 
 app.get('/', function(req, res) {
     res.render('index.ejs');
 });
 
-io.sockets.on('connection', function(socket) {
-    socket.on('username', function(username) {
-        socket.username = username;
-        io.emit('is_online', '🔵 <i>' + socket.username + ' join the chat..</i>');
-    });
-
-    socket.on('disconnect', function(username) {
-        io.emit('is_online', '🔴 <i>' + socket.username + ' left the chat..</i>');
-    })
-
-    socket.on('chat_message', function(message) {
-        io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
-    });
-
-});
-
-const server = http.listen(8080, function() {
+app.listen(8080, function() {
     console.log('listening on *:8080');
 });
