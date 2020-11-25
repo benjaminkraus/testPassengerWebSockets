@@ -21,10 +21,9 @@
     </form>
     <script>
             function isTyping() {
-                
             }
 
-            var wss = new WebSocket('ws://localhost:8080');
+            var wss = new WebSocket('ws://localhost:8081');
 
             // submit text message without reload/refresh the page
             $('form').submit(function(e){
@@ -32,8 +31,6 @@
                 msg = {
                     chat_message: $('#txt').val()
                 };
-                console.log(wss.readyState);
-                console.log(msg);
                 wss.send(JSON.stringify(msg));
                 $('#txt').val('');
                 return false;
@@ -55,9 +52,13 @@
             msg = {
                 username: username
             };
-            console.log(wss.readyState);
-            console.log(msg);
-            wss.send(JSON.stringify(msg));
+            if (wss.readyState == wss.OPEN) {
+                wss.send(JSON.stringify(msg));
+            } else {
+                wss.onopen = function(event) {
+                    wss.send(JSON.stringify(msg));
+                }
+            }
     </script>
   </body>
 </html>
