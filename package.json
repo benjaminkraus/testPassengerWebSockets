@@ -1,0 +1,15 @@
+{
+  "name": "testwebsockets",
+  "version": "0.0.1",
+  "description": "Chat app to test web sockets",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Benjamin Kraus",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0"
+  }
+}
