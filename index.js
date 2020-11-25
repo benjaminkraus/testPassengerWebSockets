@@ -1,8 +1,9 @@
 var express = require('express');
 var app = express();
-var expressWs = require('express-ws')(app);
+//var expressWs = require('express-ws')(app);
 const WebSocket = require("ws");
-var wss = expressWs.getWss();
+const wss = new WebSocket.Server({ port: 8081 });
+//var wss = expressWs.getWss();
 function broadcast(message) {
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
@@ -11,7 +12,8 @@ function broadcast(message) {
   });
 }
 
-app.ws('/', (ws, req) => {
+//app.ws('/', (ws, req) => {
+wss.on('connection', ws => {
   ws.on("message", json => {
       var messageIn = JSON.parse(json);
       var messageOut;
@@ -28,7 +30,7 @@ app.ws('/', (ws, req) => {
       }
       broadcast(messageOut)
   });
-  
+
   ws.on("close", (code, reason) => {
       messageOut = {
           is_online: '🔴 <i>' + ws.username + ' left the chat..</i>'
