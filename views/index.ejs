@@ -23,7 +23,7 @@
             function isTyping() {
             }
 
-            var wss = new WebSocket('ws://localhost:<%= port %>');
+            var wss = new WebSocket('ws://<%= hostname + ':' + port %>');
 
             // submit text message without reload/refresh the page
             $('form').submit(function(e){

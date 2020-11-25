@@ -50,7 +50,7 @@ function connection(ws) {
 }
 
 app.get('/', function(req, res) {
-    res.render('index.ejs', { port: wsport });
+    res.render('index.ejs', { hostname: req.hostname, port: wsport });
 });
 
 app.listen(httpport, function() {
