@@ -6,11 +6,16 @@
   "scripts": {
     "start": "node app.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjaminkraus/testwebsockets.git"
+  },
   "author": "Benjamin Kraus",
   "license": "UNLICENSED",
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-ws": "^4.0.0"
+    "express-ws": "^4.0.0",
+    "ws": "^7.4.0"
   }
 }
