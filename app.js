@@ -1,9 +1,20 @@
-var express = require('express');
-var app = express();
-//var expressWs = require('express-ws')(app);
+require('dotenv').config()
+const httpport = process.env.PORT || 8080;
+const wsport = process.env.WSPORT || httpport;
+let express = require('express');
+let app = express();
+
 const WebSocket = require("ws");
-const wss = new WebSocket.Server({ port: 8081 });
-//var wss = expressWs.getWss();
+let wss;
+if (httpport == wsport) {
+    let expressWs = require('express-ws')(app);
+    wss = expressWs.getWss();
+    app.ws('/', connection);
+} else {
+    wss = new WebSocket.Server({ port: wsport });
+    wss.on('connection', connection);
+}
+
 function broadcast(message) {
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
@@ -12,8 +23,7 @@ function broadcast(message) {
   });
 }
 
-//app.ws('/', (ws, req) => {
-wss.on('connection', ws => {
+function connection(ws) {
   ws.on("message", json => {
       var messageIn = JSON.parse(json);
       var messageOut;
@@ -37,12 +47,13 @@ wss.on('connection', ws => {
       };
       broadcast(messageOut)
   });
-});
+}
 
 app.get('/', function(req, res) {
-    res.render('index.ejs');
+    res.render('index.ejs', { port: wsport });
 });
 
-app.listen(8080, function() {
-    console.log('listening on *:8080');
+app.listen(httpport, function() {
+    console.log('listening on (http) *:' + httpport);
+    console.log('listening on (ws) *:' + wsport);
 });
