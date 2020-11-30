@@ -1,17 +1,44 @@
 require('dotenv').config()
-const httpport = process.env.PORT || 8080;
+let httpport = process.env.PORT || 8080;
 const wsport = process.env.WSPORT || httpport;
+
+let usingPassenger = false;
+if (typeof(PhusionPassenger) != 'undefined') {
+    PhusionPassenger.configure({ autoInstall: false });
+    usingPassenger = true;
+    httpport = 'passenger';
+}
+
 let express = require('express');
 let app = express();
 
+const fs = require('fs');
+const certificate = fs.readFileSync('./cert/cert.pem');
+const privateKey  = fs.readFileSync('./cert/key.pem');
+const https = require('https');
+
+let expressServer = app;
+if (!usingPassenger) {
+    expressServer = https.createServer({
+        cert: certificate,
+        key: privateKey
+    }, app);
+}
+
 const WebSocket = require("ws");
 let wss;
+let websocketServer;
 if (httpport == wsport) {
-    let expressWs = require('express-ws')(app);
+    let expressWs = require('express-ws')(app, expressServer);
     wss = expressWs.getWss();
     app.ws('/', connection);
 } else {
-    wss = new WebSocket.Server({ port: wsport });
+    websocketServer = https.createServer({
+        cert: certificate,
+        key: privateKey
+    });
+
+    wss = new WebSocket.Server({ server: websocketServer });
     wss.on('connection', connection);
 }
 
@@ -50,10 +77,16 @@ function connection(ws) {
 }
 
 app.get('/', function(req, res) {
-    res.render('index.ejs', { hostname: req.hostname, port: wsport });
+    res.render('index.ejs', { protocol: 'wss', hostname: req.hostname, port: wsport });
 });
 
-app.listen(httpport, function() {
-    console.log('listening on (http) *:' + httpport);
-    console.log('listening on (ws) *:' + wsport);
+
+expressServer.listen(httpport, () => {
+    console.log('listening on (https) *:' + httpport);
 });
+
+if (websocketServer) {
+    websocketServer.listen(wsport, () => {
+        console.log('listening on (ws) *:' + wsport);
+    });
+}
