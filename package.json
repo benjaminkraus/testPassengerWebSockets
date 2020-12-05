@@ -11,7 +11,7 @@
     "url": "git+https://github.com/benjaminkraus/testPassengerWebSockets.git"
   },
   "author": "Benjamin Kraus",
-  "license": "isc",
+  "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
