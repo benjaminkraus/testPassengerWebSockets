@@ -1,17 +1,17 @@
 {
-  "name": "testwebsockets",
-  "version": "0.0.1",
-  "description": "Chat app to test web sockets",
+  "name": "testPassengerWebSockets",
+  "version": "1.0.0",
+  "description": "Chat app to test web sockets hosted by Phusion Passenger",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benjaminkraus/testwebsockets.git"
+    "url": "git+https://github.com/benjaminkraus/testPassengerWebSockets.git"
   },
   "author": "Benjamin Kraus",
-  "license": "UNLICENSED",
+  "license": "isc",
   "dependencies": {
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
