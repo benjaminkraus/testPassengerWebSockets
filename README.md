@@ -7,6 +7,8 @@ The code is heavily modified from an [example app](https://itnext.io/build-a-gro
 
 I wrote this to test using WebSockets hosted by [DreamHost Shared Hosting](https://www.dreamhost.com/hosting/shared/).
 
+***Disclaimer: I am in no way affiliated with DreamHost, and this app is not sanctioned by DreamHost in any way. It is your responsibility to make sure that your use of this code complies with the DreamHost Terms of Service.***
+
 ## Setup
 This app should work when run either locally or when hosted by Phusion Passenger.
 
@@ -33,6 +35,8 @@ node app.js
 Load the app from [https://localhost:8080/](https://localhost:8080/).
 
 ### Hosting on DreamHost
+***Disclaimer: I am in no way affiliated with DreamHost, and this app is not sanctioned by DreamHost in any way. It is your responsibility to make sure that your use of this code complies with the DreamHost Terms of Service.***
+
 #### Set-up Node.js on DreamHost
 For instructions on configuring Node.js on DreamHost, you can visit these guides:
 - [Node.js overview](https://help.dreamhost.com/hc/en-us/articles/217185397-Node-js-overview)
