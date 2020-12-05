@@ -1,4 +1,5 @@
 node_modules
 cert
+public
 tmp
 .env
